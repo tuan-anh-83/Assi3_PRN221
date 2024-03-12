@@ -1,0 +1,13 @@
+﻿<Window x:Class="Assi3_PRN221.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Countdown Timer" Height="300" Width="500">
+    <Grid>
+        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+            <TextBlock Text="Countdown Time (seconds):"/>
+            <TextBox x:Name="txtCountdownTime" Width="100"/>
+            <Button Content="Start Countdown" Click="StartCountdown_Click"/>
+            <TextBlock x:Name="txtCountdownDisplay" Margin="0,0,0,0" FontSize="20" HorizontalAlignment="Center"/>
+        </StackPanel>
+    </Grid>
+</Window>
