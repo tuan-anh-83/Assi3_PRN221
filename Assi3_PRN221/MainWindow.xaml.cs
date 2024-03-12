@@ -17,7 +17,10 @@ namespace Assi3_PRN221
     /// </summary>
     public partial class MainWindow : Window
     {
-        private int countdownTime;
+        private int countdownHours;
+        private int countdownMinutes;
+        private int countdownSeconds;
+        private TimeSpan countdownTimeSpan;
         private Thread countdownThread;
 
         public MainWindow()
@@ -27,36 +30,41 @@ namespace Assi3_PRN221
 
         private void StartCountdown_Click(object sender, RoutedEventArgs e)
         {
-            if (int.TryParse(txtCountdownTime.Text, out int time))
+            if (int.TryParse(txtHours.Text, out int hours) && int.TryParse(txtMinutes.Text, out int minutes) && int.TryParse(txtSeconds.Text, out int seconds))
             {
-                countdownTime = time;
+                countdownHours = hours;
+                countdownMinutes = minutes;
+                countdownSeconds = seconds;
+                countdownTimeSpan = new TimeSpan(countdownHours, countdownMinutes, countdownSeconds);
                 countdownThread = new Thread(new ThreadStart(Countdown));
                 countdownThread.Start();
             }
             else
             {
-                MessageBox.Show("Please enter a valid integer for countdown time.");
+                MessageBox.Show("Please enter valid integer values for hours, minutes, and seconds.");
             }
         }
 
         private void Countdown()
         {
-            for (int i = countdownTime; i >= 0; i--)
+            while (countdownTimeSpan.TotalSeconds > 0)
             {
-                UpdateCountdownDisplay(i);
+                UpdateCountdownDisplay(countdownTimeSpan.ToString(@"hh\:mm\:ss"));
+                countdownTimeSpan = countdownTimeSpan.Subtract(TimeSpan.FromSeconds(1));
                 Thread.Sleep(1000); // Sleep for 1 second
             }
+            UpdateCountdownDisplay("00:00:00");
         }
 
-        private void UpdateCountdownDisplay(int secondsRemaining)
+        private void UpdateCountdownDisplay(string time)
         {
             if (txtCountdownDisplay.Dispatcher.CheckAccess())
             {
-                txtCountdownDisplay.Text = TimeSpan.FromSeconds(secondsRemaining).ToString(@"hh\:mm\:ss");
+                txtCountdownDisplay.Text = time;
             }
             else
             {
-                txtCountdownDisplay.Dispatcher.Invoke(() => UpdateCountdownDisplay(secondsRemaining));
+                txtCountdownDisplay.Dispatcher.Invoke(() => UpdateCountdownDisplay(time));
             }
         }
     }
