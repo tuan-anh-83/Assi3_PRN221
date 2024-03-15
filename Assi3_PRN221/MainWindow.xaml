@@ -24,7 +24,12 @@
             <TextBlock Text="second(s)" Margin="5" VerticalAlignment="Center"/>
         </StackPanel>
 
-        <Button Content="Start Countdown" Grid.Row="2" HorizontalAlignment="Center" Click="StartCountdown_Click"/>
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center">
+            <Button Content="Start" Click="StartCountdown_Click" Margin="5"/>
+            <Button x:Name="btnPause" Content="Pause" Click="PauseCountdown_Click" Margin="5"/>
+            <Button x:Name="btnResume" Content="Resume" Click="ResumeCountdown_Click" Margin="5" Visibility="Collapsed"/>
+            <Button Content="Reset" Click="ResetCountdown_Click" Margin="5"/>
+        </StackPanel>
 
         <TextBlock x:Name="txtCountdownDisplay" Grid.Row="3" HorizontalAlignment="Center" Margin="0,20" FontSize="20"/>
     </Grid>

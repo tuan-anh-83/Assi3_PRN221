@@ -22,6 +22,8 @@ namespace Assi3_PRN221
         private int countdownSeconds;
         private TimeSpan countdownTimeSpan;
         private Thread countdownThread;
+        private bool isCountdownRunning = false;
+        private bool isCountdownPaused = false;
 
         public MainWindow()
         {
@@ -36,6 +38,7 @@ namespace Assi3_PRN221
                 countdownMinutes = minutes;
                 countdownSeconds = seconds;
                 countdownTimeSpan = new TimeSpan(countdownHours, countdownMinutes, countdownSeconds);
+                isCountdownRunning = true;
                 countdownThread = new Thread(new ThreadStart(Countdown));
                 countdownThread.Start();
             }
@@ -45,14 +48,44 @@ namespace Assi3_PRN221
             }
         }
 
+        private void PauseCountdown_Click(object sender, RoutedEventArgs e)
+        {
+            isCountdownPaused = true;
+            btnPause.Visibility = Visibility.Collapsed;
+            btnResume.Visibility = Visibility.Visible;
+        }
+
+        private void ResumeCountdown_Click(object sender, RoutedEventArgs e)
+        {
+            isCountdownPaused = false;
+            btnPause.Visibility = Visibility.Visible;
+            btnResume.Visibility = Visibility.Collapsed;
+        }
+
+        private void ResetCountdown_Click(object sender, RoutedEventArgs e)
+        {
+            isCountdownRunning = false;
+            isCountdownPaused = false;
+            txtCountdownDisplay.Text = "";
+            txtHours.Text = "";
+            txtMinutes.Text = "";
+            txtSeconds.Text = "";
+            btnPause.Visibility = Visibility.Visible;
+            btnResume.Visibility = Visibility.Collapsed;
+        }
+
         private void Countdown()
         {
-            while (countdownTimeSpan.TotalSeconds > 0)
+            while (isCountdownRunning && countdownTimeSpan.TotalSeconds > 0)
             {
-                UpdateCountdownDisplay(countdownTimeSpan.ToString(@"hh\:mm\:ss"));
-                countdownTimeSpan = countdownTimeSpan.Subtract(TimeSpan.FromSeconds(1));
+                if (!isCountdownPaused)
+                {
+                    UpdateCountdownDisplay(countdownTimeSpan.ToString(@"hh\:mm\:ss"));
+                    countdownTimeSpan = countdownTimeSpan.Subtract(TimeSpan.FromSeconds(1));
+                }
                 Thread.Sleep(1000); // Sleep for 1 second
             }
+            isCountdownRunning = false;
             UpdateCountdownDisplay("00:00:00");
         }
 
